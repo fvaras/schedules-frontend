@@ -3,8 +3,8 @@ import Schedule from './components/Schedule'
 import io from 'socket.io-client';
 
 const connectSocket = () => {
-  const socket = io.connect('https://fvaras-schedules-back-nodejs.herokuapp.com/')
-  // const socket = io.connect('http://localhost:3001')
+  // const socket = io.connect('https://fvaras-schedules-back-nodejs.herokuapp.com/')
+  const socket = io.connect('http://localhost:3001')
   return socket
 }
 

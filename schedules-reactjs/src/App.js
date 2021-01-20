@@ -1,22 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import Schedule from './components/Schedule'
 import io from 'socket.io-client';
 
-const connectSocket = () => {
-  // const socket = io.connect('https://fvaras-schedules-back-nodejs.herokuapp.com/')
-  const socket = io.connect('http://localhost:3001')
-  return socket
-}
-
 const App = () => {
 
-  const [socket] = useState(connectSocket())
+  // const apiUrl = 'http://localhost:3001'
+  const apiUrl = 'https://fvaras-schedules-back-nodejs.herokuapp.com/'
+  const socket = useMemo(() => io.connect(apiUrl), [apiUrl]);
   const [schedules, setSchedules] = useState([])
   const [isFull, setIsFull] = useState(false)
 
   useEffect(() => {
+    if (socket === undefined) return
     socket.on('update', data => {
-      console.log('update schedules', data)
+      // console.log('update schedules', data)
       const { schedules, isFull } = data
       setSchedules(schedules)
       setIsFull(isFull)

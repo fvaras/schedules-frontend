@@ -2,7 +2,7 @@ import React from 'react'
 import format from 'date-fns/format'
 
 const Schedule = ({ schedule, setSchedule, isFull }) => {
-    const { start, end, isAvailable, formattedTime } = schedule
+    const { isAvailable, formattedTime } = schedule
 
     let btnClass = "btn btn-lg "
     if (!isAvailable)

@@ -1,52 +1,37 @@
 import React, { useEffect, useState } from 'react'
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Alert, FlatList, SafeAreaView } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, View, Alert, FlatList, SafeAreaView } from 'react-native';
 import format from 'date-fns/format'
 import addMinutes from 'date-fns/addMinutes'
 // import { eoLocale } from 'date-fns/locale/eo'
 
-const Schedule = ({ schedule, isFull }) => {
-    const { start, end, isAvailable } = schedule
-    const [range, setRange] = useState('')
-    const [bgColor, setBgColor] = useState(styles.item.backgroundColor)
+const COLOR_DISPONIBLE = '#0069D9'
+const COLOR_NO_DISPONIBLE = '#28A745'
+const COLOR_BUSY = '#DC3545'
 
-    console.log('start', start.slice(-13, -5))
-    console.log('isFull', isFull)
+const Schedule = ({ schedule, isFull, setSchedule }) => {
+    const { isAvailable, formattedTime } = schedule
 
-    useEffect(() => {
-        // start
-        const startTime = new Date(start)
-        const startTimeOffset = startTime.getTimezoneOffset()
-        const startSchedule = addMinutes(startTime, startTimeOffset)
-
-        // end
-        const endTime = new Date(end)
-        const endTimeOffset = endTime.getTimezoneOffset()
-        const endSchedule = addMinutes(endTime, endTimeOffset)
-
-        setRange(`${format(startSchedule, 'HH:mm')} - ${format(endSchedule, 'HH:mm')}`)
-
-        // let btnClass = "btn btn-lg "
-        if (!isAvailable)
-            setBgColor('#28A745')
-        else {
-            if (isFull)
-                setBgColor('#DC3545')
-            else
-                setBgColor('#0069D9')
-        }
-    }, [schedule])
-
+    let bgColor = styles.item.backgroundColor
+    if (!isAvailable)
+        bgColor = COLOR_NO_DISPONIBLE
+    else {
+        // Funciona solo en el dispositivo, en modo web los valores están intercambiados
+        if (isFull)
+            bgColor = COLOR_BUSY
+        else
+            bgColor = COLOR_DISPONIBLE
+    }
 
     return (
-        <View style={[styles.item, { backgroundColor: bgColor, }]}>
-            {/* style={styles.item} */}
+        <TouchableOpacity
+            style={[styles.item, { backgroundColor: bgColor, }]}
+            onPress={() => setSchedule(schedule)}
+        >
             <Text style={styles.title}>
-                {/* {format(new Date(start), 'HH:mm')} - {format(new Date(end), 'HH:mm')} */}
-                {range}
-                {/* {JSON.stringify(schedule)} */}
+                {formattedTime}
             </Text>
-        </View>)
+        </TouchableOpacity>)
 }
 
 const styles = StyleSheet.create({
